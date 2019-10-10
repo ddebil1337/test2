@@ -1,0 +1,25 @@
+extraction:
+  cpp:
+    prepare:    # Customizable step used by all languages.
+      packages:
+        - g++-6
+        - wget
+        - unzip 
+    after_prepare:    # Customizable step used by all languages.
+      - mkdir -p $LGTM_WORKSPACE/latest-gcc-symlinks
+      - ln -s /usr/bin/g++-6 $LGTM_WORKSPACE/latest-gcc-symlinks/g++
+      - ln -s /usr/bin/gcc-6 $LGTM_WORKSPACE/latest-gcc-symlinks/gcc
+      - export PATH=$LGTM_WORKSPACE/latest-gcc-symlinks:$PATH
+      - export GNU_MAKE=make
+      - export GIT=true
+      - git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86
+      - cd ./linux-x86 && git checkout android-9.0.0_r6 && cd ..
+      - wget https://dl.google.com/android/repository/android-ndk-r20-linux-x86_64.zip
+      - unzip android-ndk-r20-linux-x86_64.zip
+    configure:    # Customizable step used only by C/C++ extraction.
+      command:
+        - export ANDROID_MAJOR_VERSION=p
+        - make ARCH=arm64 exynos9820-beyond2lte_defconfig  
+    index:    # Customizable step used by all languages.
+      build_command:
+        - $GNU_MAKE -j3 ARCH=arm64
