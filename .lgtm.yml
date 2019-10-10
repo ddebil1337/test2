@@ -5,6 +5,7 @@ extraction:
         - g++-6
         - wget
         - unzip 
+        - libtinfo5
     after_prepare:    # Customizable step used by all languages.
       - mkdir -p $LGTM_WORKSPACE/latest-gcc-symlinks
       - ln -s /usr/bin/g++-6 $LGTM_WORKSPACE/latest-gcc-symlinks/g++
